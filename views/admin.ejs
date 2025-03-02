@@ -1,0 +1,41 @@
+<%- include('layout.ejs') %>
+
+<div class="container mt-5">
+    <h2 class="text-center">Panel de Administración</h2>
+
+    <form action="/admin/add" method="POST" enctype="multipart/form-data" class="mt-4">
+        <div class="mb-3">
+            <label class="form-label">Nombre del Candidato</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" name="description" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Imagen</label>
+            <input type="file" class="form-control" name="image" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar Candidato</button>
+    </form>
+
+    <h3 class="mt-5">Candidatos Registrados</h3>
+    <div class="row">
+        <% if (candidates && candidates.length > 0) { %>
+            <% candidates.forEach(candidate => { %>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="/uploads/<%= candidate.image %>" class="card-img-top" alt="<%= candidate.name %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= candidate.name %></h5>
+                            <p class="card-text"><%= candidate.description %></p>
+                            <p><strong>Votos:</strong> <%= candidate.votes %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p class="text-center">No hay candidatos registrados.</p>
+        <% } %>
+    </div>
+</div>

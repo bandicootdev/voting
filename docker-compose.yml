@@ -4,28 +4,38 @@ services:
   mongodb:
     image: mongo:latest
     container_name: mongodb
-    restart: always
-    ports:
-      - "27017:27017"
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 25667793
     volumes:
       - mongodb_data:/data/db
-  
+    networks:
+      - internal_network
+
   app:
     build: .
     container_name: votacion_app
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:3000"
     depends_on:
       - mongodb
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/votacion
+      - MONGO_URI=mongodb://admin:25667793@mongodb:27017/votacion?authSource=admin
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - MASTER_EMAIL=${MASTER_EMAIL}
     volumes:
       - .:/app
     command: ["node", "server.js"]
+    networks:
+      - internal_network
 
 volumes:
   mongodb_data:
+
+networks:
+  internal_network:
+    driver: bridge
+

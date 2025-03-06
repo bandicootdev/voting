@@ -24,10 +24,10 @@ router.get('/', isMaster, async (req, res) => {
     try {
         const candidates = await Candidate.find();
         res.render('admin', { title: 'Admin', user: req.user, candidates });
-      } catch (error) {
+    } catch (error) {
         console.error('Error cargando la página de admin:', error);
         res.status(500).send('Error interno del servidor');
-      }
+    }
 });
 
 // Agregar un nuevo candidato
@@ -40,4 +40,36 @@ router.post('/add', isMaster, upload.single('image'), async (req, res) => {
   res.redirect('/admin');
 });
 
+// Editar un candidato
+router.post('/edit/:id', isMaster, upload.single('image'), async (req, res) => {
+  try {
+    const updateData = {
+      name: req.body.name,
+      description: req.body.description
+    };
+
+    if (req.file) {
+      updateData.image = req.file.filename;
+    }
+
+    await Candidate.findByIdAndUpdate(req.params.id, updateData);
+    res.redirect('/admin');
+  } catch (error) {
+    console.error('Error editando el candidato:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Eliminar un candidato
+router.post('/delete/:id', isMaster, async (req, res) => {
+  try {
+    await Candidate.findByIdAndDelete(req.params.id);
+    res.redirect('/admin');
+  } catch (error) {
+    console.error('Error eliminando el candidato:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
 module.exports = router;
+

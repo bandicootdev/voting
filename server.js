@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true
 }).then(() => console.log('MongoDB conectado'))
   .catch(err => console.error('Error conectando a MongoDB:', err));
-
+app.set('trust proxy', 1);
 // Configuración de sesiones
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
@@ -30,7 +30,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 🔥 Sesión expira en 24 horas (en milisegundos)
-    secure: false, // ⚠️ Si usas HTTPS, cambia esto a true
+    secure: true, // ⚠️ Si usas HTTPS, cambia esto a true
     httpOnly: true
   }
 }));

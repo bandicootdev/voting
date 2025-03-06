@@ -30,6 +30,43 @@
                             <h5 class="card-title"><%= candidate.name %></h5>
                             <p class="card-text"><%= candidate.description %></p>
                             <p><strong>Votos:</strong> <%= candidate.votes %></p>
+                            
+                            <!-- Botón para editar -->
+                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal<%= candidate._id %>">Editar</button>
+                            
+                            <!-- Botón para eliminar -->
+                            <form action="/admin/delete/<%= candidate._id %>" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este candidato?');">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para editar candidato -->
+                <div class="modal fade" id="editModal<%= candidate._id %>" tabindex="-1" aria-labelledby="editModalLabel<%= candidate._id %>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel<%= candidate._id %>">Editar Candidato</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/admin/edit/<%= candidate._id %>" method="POST" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre del Candidato</label>
+                                        <input type="text" class="form-control" name="name" value="<%= candidate.name %>" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Descripción</label>
+                                        <textarea class="form-control" name="description" required><%= candidate.description %></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Imagen (Opcional)</label>
+                                        <input type="file" class="form-control" name="image">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -39,3 +76,4 @@
         <% } %>
     </div>
 </div>
+
